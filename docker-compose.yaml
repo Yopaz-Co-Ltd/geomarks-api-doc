@@ -5,7 +5,7 @@ services:
     ports:
       - "8899:8080"
     volumes:
-      - ./tsp-output/schema:/usr/share/nginx/html/specs  # chứa các .yaml
+      - ./tsp-output/schema:/usr/share/nginx/html/specs
       - ./swagger-config.yaml:/usr/share/nginx/html/swagger-config.yaml
     environment:
       CONFIG_URL: /swagger-config.yaml
