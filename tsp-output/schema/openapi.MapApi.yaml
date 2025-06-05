@@ -1,0 +1,356 @@
+openapi: 3.0.0
+info:
+  title: Map API Service
+  version: 0.0.0
+tags:
+  - name: Map
+paths:
+  /api/v1.5/maps/{map_slug}/base-data:
+    get:
+      operationId: map_baseData
+      parameters:
+        - name: map_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - data
+                properties:
+                  message:
+                    type: string
+                    nullable: true
+                  data:
+                    $ref: '#/components/schemas/BaseDataResponse'
+      tags:
+        - Map
+  /api/v1.5/maps/{map_slug}/map-setting:
+    get:
+      operationId: map_mapSetting
+      parameters:
+        - name: map_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                  - data
+                properties:
+                  message:
+                    type: string
+                    nullable: true
+                  data:
+                    $ref: '#/components/schemas/MapSettingResponse'
+      tags:
+        - Map
+components:
+  schemas:
+    BaseDataResponse:
+      type: object
+      required:
+        - map
+        - map_options
+        - toppan_point_title
+        - toppan_template_point
+        - map_levels
+        - available_level_marker
+        - open_street_map
+      properties:
+        map:
+          $ref: '#/components/schemas/Map'
+        map_options:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/MapOption'
+        toppan_point_title:
+          type: string
+        toppan_template_point:
+          type: string
+        map_levels:
+          type: array
+          items:
+            $ref: '#/components/schemas/MapLevel'
+        available_level_marker:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: integer
+              format: int32
+        open_street_map:
+          $ref: '#/components/schemas/OpenStreetMap'
+    Map:
+      type: object
+      required:
+        - id
+        - project_uid
+        - min_zoom
+        - max_zoom
+        - default_zoom
+        - map_slug
+        - convert_calculating_type
+        - max_bounds_br_lat
+        - max_bounds_br_lng
+        - analytics_tracking_id
+        - location_default
+        - analytics_property_id
+        - pusher_app_key
+        - pusher_app_cluster
+        - public
+        - project_status
+      properties:
+        id:
+          type: integer
+          format: int32
+        project_uid:
+          type: string
+        min_zoom:
+          type: integer
+          format: int32
+        max_zoom:
+          type: integer
+          format: int32
+        default_zoom:
+          type: integer
+          format: int32
+        map_slug:
+          type: string
+        convert_calculating_type:
+          type: string
+        max_bounds_br_lat:
+          type: number
+          format: float
+        max_bounds_br_lng:
+          type: number
+          format: float
+        analytics_tracking_id:
+          type: integer
+          format: int32
+          nullable: true
+        location_default:
+          type: string
+        analytics_property_id:
+          type: integer
+          format: int32
+          nullable: true
+        pusher_app_key:
+          type: string
+          nullable: true
+        pusher_app_cluster:
+          type: string
+          nullable: true
+        public:
+          type: integer
+          format: int32
+        project_status:
+          type: string
+    MapLevel:
+      type: object
+      required:
+        - id
+        - zoom_levels
+        - bounds
+        - center_lat
+        - center_lng
+      properties:
+        id:
+          type: integer
+          format: int32
+        zoom_levels:
+          type: array
+          items:
+            type: integer
+            format: int32
+        bounds:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: float
+        center_lat:
+          type: number
+          format: float
+        center_lng:
+          type: number
+          format: float
+    MapOption:
+      type: object
+      required:
+        - key
+        - name
+        - order
+        - tiles_path
+        - image_url
+        - thumbnail
+        - active
+      properties:
+        key:
+          type: integer
+          format: int32
+        name:
+          type: string
+        order:
+          type: integer
+          format: int32
+        tiles_path:
+          type: string
+        image_url:
+          type: object
+          additionalProperties:
+            type: string
+        thumbnail:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Thumbnail'
+        active:
+          type: string
+    MapSettingResponse:
+      type: object
+      required:
+        - show_start_screen
+        - time_show_start_screen
+        - icon_mode_zoom_fit
+        - icon_zoom_fit
+        - icon_ratio_w
+        - icon_ratio_h
+        - icon_mode_ratio_w
+        - icon_mode_ratio_h
+        - location_icon_url
+        - location_mode_icon_url
+        - logo_mobile_url
+        - background_mobile_url
+        - logo_desktop_url
+        - background_desktop_url
+        - logo_url
+        - footer_setting
+        - activity_point_status
+        - activity_point_quantity
+        - activity_point_time_reset
+        - activity_point_time_reset_unit
+        - setting_point_for_spot
+        - use_text_to_text
+        - use_text_to_speech
+        - checkin_auto
+      properties:
+        show_start_screen:
+          type: number
+          format: float
+        time_show_start_screen:
+          type: number
+          format: float
+        icon_mode_zoom_fit:
+          type: number
+          format: float
+        icon_zoom_fit:
+          type: number
+          format: float
+        icon_ratio_w:
+          type: number
+          format: float
+        icon_ratio_h:
+          type: number
+          format: float
+        icon_mode_ratio_w:
+          type: number
+          format: float
+        icon_mode_ratio_h:
+          type: number
+          format: float
+        location_icon_url:
+          type: string
+        location_mode_icon_url:
+          type: string
+        logo_mobile_url:
+          type: string
+        background_mobile_url:
+          type: string
+        logo_desktop_url:
+          type: string
+        background_desktop_url:
+          type: string
+        logo_url:
+          type: string
+          nullable: true
+        footer_setting:
+          type: string
+          nullable: true
+        activity_point_status:
+          type: integer
+          format: int32
+        activity_point_quantity:
+          type: integer
+          format: int32
+        activity_point_time_reset:
+          type: string
+        activity_point_time_reset_unit:
+          type: string
+        setting_point_for_spot:
+          type: integer
+          format: int32
+        use_text_to_text:
+          type: boolean
+        use_text_to_speech:
+          type: boolean
+        checkin_auto:
+          type: boolean
+    OpenStreetMap:
+      type: object
+      required:
+        - id
+        - active
+        - only_open_street_map
+        - min_zoom
+        - max_zoom
+      properties:
+        id:
+          type: integer
+          format: int32
+        active:
+          type: integer
+          format: int32
+        only_open_street_map:
+          type: integer
+          format: int32
+        min_zoom:
+          type: integer
+          format: int32
+        max_zoom:
+          type: integer
+          format: int32
+    Thumbnail:
+      type: object
+      required:
+        - large
+        - medium
+        - small
+        - tiny
+      properties:
+        large:
+          type: string
+        medium:
+          type: string
+        small:
+          type: string
+        tiny:
+          type: string
+servers:
+  - url: https://engine.geomark.yopaz.dev
+    description: DevServer
+    variables: {}

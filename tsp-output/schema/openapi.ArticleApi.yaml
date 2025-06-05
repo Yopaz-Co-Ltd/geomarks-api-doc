@@ -1,0 +1,367 @@
+openapi: 3.0.0
+info:
+  title: Article API Service
+  version: 0.0.0
+tags:
+  - name: Article Api
+paths:
+  /api/articles/article-processes/latest-processes:
+    get:
+      operationId: latestArticles
+      parameters:
+        - name: list_article_uid[article_uid]
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestArticleResponse'
+      tags:
+        - Article Api
+      security:
+        - BearerAuth: []
+  /api/articles/{article_uid}/can-buy-status:
+    get:
+      operationId: canBuyArticle
+      parameters:
+        - name: article_uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanBuyArticleResponse'
+      tags:
+        - Article Api
+      security:
+        - BearerAuth: []
+  /api/owned-articles/{article_uid}:
+    get:
+      operationId: canBuyOwnedArticle
+      parameters:
+        - name: article_uid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OwnedArticleResponse'
+      tags:
+        - Article Api
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    Article:
+      type: object
+      required:
+        - id
+        - uid
+        - name
+        - type
+        - active
+        - description
+        - seller_pay_gas_fee
+        - collection_id
+        - can_edit_media
+        - created_at
+        - updated_at
+        - source_media
+        - preview_media
+        - web3_storage_media
+        - article_obtain_condition
+        - article_find_conditions
+        - collection
+        - quest_id
+        - product
+      properties:
+        id:
+          type: integer
+          format: int32
+        uid:
+          type: string
+        name:
+          type: string
+        type:
+          type: integer
+          format: int32
+        active:
+          type: integer
+          format: int32
+        description:
+          type: string
+        seller_pay_gas_fee:
+          type: integer
+          format: int32
+        collection_id:
+          type: integer
+          format: int32
+        can_edit_media:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        deleted_at:
+          type: string
+        source_media:
+          $ref: '#/components/schemas/SourceMedia'
+        preview_media:
+          $ref: '#/components/schemas/PreviewMedia'
+        web3_storage_media:
+          $ref: '#/components/schemas/Web3StorageMedia'
+        article_obtain_condition:
+          $ref: '#/components/schemas/ArticleObtainCondition'
+        article_find_conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleFindCondition'
+        preview_setting:
+          type: string
+        collection:
+          $ref: '#/components/schemas/ArticleCollection'
+        quest_id:
+          type: integer
+          format: int32
+        product:
+          $ref: '#/components/schemas/ArticleProduct'
+    ArticleCollection:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        smart_contract_address:
+          type: string
+    ArticleFindCondition:
+      type: object
+      required:
+        - id
+        - article_uid
+        - find_condition_id
+        - data
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          format: int32
+        article_uid:
+          type: string
+        find_condition_id:
+          type: integer
+          format: int32
+        data:
+          $ref: '#/components/schemas/FindConditionData'
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    ArticleObtainCondition:
+      type: object
+      required:
+        - article_uid
+        - obtain_condition_id
+        - data
+      properties:
+        article_uid:
+          type: string
+        obtain_condition_id:
+          type: integer
+          format: int32
+        data:
+          type: object
+          properties:
+            price:
+              type: string
+          required:
+            - price
+    ArticleProduct:
+      type: object
+      required:
+        - id
+        - uid
+        - model_id
+        - model_type
+        - status
+        - sale_status
+        - unlimited
+        - amount
+        - amount_total_sale
+        - user_hold_limit
+        - seller_pay_gas_fee
+        - price
+        - on_sale_start_time
+        - on_sale_end_time
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          format: int32
+        uid:
+          type: string
+        model_id:
+          type: string
+        model_type:
+          type: string
+        status:
+          type: integer
+          format: int32
+        sale_status:
+          type: integer
+          format: int32
+        unlimited:
+          type: integer
+          format: int32
+        amount:
+          type: integer
+          format: int32
+        amount_total_sale:
+          type: integer
+          format: int32
+        user_hold_limit:
+          type: integer
+          format: int32
+        seller_pay_gas_fee:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        on_sale_start_time:
+          type: string
+        on_sale_end_time:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        deleted_at:
+          type: string
+    CanBuyArticleResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: boolean
+    FindConditionData:
+      type: object
+      properties:
+        spot_id:
+          type: integer
+          format: int32
+        project_uid:
+          type: string
+        access_token:
+          type: string
+    LatestArticleResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Article'
+    OwnedArticleResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: object
+          properties:
+            owned_quantity:
+              type: integer
+              format: int32
+          required:
+            - owned_quantity
+    PreviewMedia:
+      type: object
+      required:
+        - media_url
+        - article_uid
+        - mine_type
+      properties:
+        media_url:
+          type: string
+        article_uid:
+          type: string
+        mine_type:
+          type: string
+    SourceMedia:
+      type: object
+      required:
+        - media_url
+        - article_uid
+        - mine_type
+      properties:
+        media_url:
+          type: string
+        article_uid:
+          type: string
+        mine_type:
+          type: string
+        poster_url:
+          type: string
+        short_url:
+          type: string
+        convert_url:
+          type: string
+    Web3StorageMedia:
+      type: object
+      required:
+        - web3_media_uid
+        - article_uid
+        - web3_media_cid
+      properties:
+        web3_media_uid:
+          type: string
+        article_uid:
+          type: string
+        web3_media_cid:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://engine.geomark.yopaz.dev
+    description: DevServer
+    variables: {}

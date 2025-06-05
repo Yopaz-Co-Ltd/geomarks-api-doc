@@ -1,0 +1,1071 @@
+openapi: 3.0.0
+info:
+  title: Spot Api Service
+  version: 0.0.0
+tags:
+  - name: Comment Api
+  - name: Like Api
+  - name: Spot V1.5 Api
+  - name: Spot V2 Api
+paths:
+  /api/comment:
+    post:
+      operationId: createComment
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCommentResponse'
+      tags:
+        - Comment Api
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentInput'
+  /api/spot/{spot_id}/like:
+    post:
+      operationId: likeSpot
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LikeSpotResponse'
+      tags:
+        - Like Api
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LikeSpotInput'
+  /api/v1.5/maps/{map_slug}/spots:
+    get:
+      operationId: spotV1_spots
+      parameters:
+        - name: map_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotResponse'
+      tags:
+        - Spot V1.5 Api
+  /api/v1.5/maps/{map_slug}/spots/have-article:
+    get:
+      operationId: spotV1_haveArticle
+      parameters:
+        - name: map_slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HaveArticleResponse'
+      tags:
+        - Spot V1.5 Api
+  /api/v2/spots/calculating:
+    get:
+      operationId: spotV2_calculating
+      parameters:
+        - name: conditions[map_id]
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculatingSpotResponse'
+      tags:
+        - Spot V2 Api
+  /api/v2/spots/synced-spots:
+    get:
+      operationId: spotV2_syncSpot
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncSpotResponse'
+      tags:
+        - Spot V2 Api
+  /api/v2/spots/tags:
+    get:
+      operationId: spotV2_tags
+      parameters:
+        - name: map_id
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotTagsResponse'
+      tags:
+        - Spot V2 Api
+  /api/v2/spots/{spot_id}:
+    get:
+      operationId: spotV2_spot
+      parameters:
+        - name: spot_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: relationships[]
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/RelationshipType'
+          explode: false
+        - name: resource
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ResourceType'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpotDetailResponse'
+      tags:
+        - Spot V2 Api
+components:
+  schemas:
+    Article:
+      type: object
+      required:
+        - id
+        - uid
+        - name
+        - type
+        - active
+        - description
+        - seller_pay_gas_fee
+        - collection_id
+        - can_edit_media
+        - created_at
+        - updated_at
+        - source_media
+        - preview_media
+        - web3_storage_media
+        - article_obtain_condition
+        - article_find_conditions
+        - collection
+        - quest_id
+        - product
+      properties:
+        id:
+          type: integer
+          format: int32
+        uid:
+          type: string
+        name:
+          type: string
+        type:
+          type: integer
+          format: int32
+        active:
+          type: integer
+          format: int32
+        description:
+          type: string
+        seller_pay_gas_fee:
+          type: integer
+          format: int32
+        collection_id:
+          type: integer
+          format: int32
+        can_edit_media:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        deleted_at:
+          type: string
+        source_media:
+          $ref: '#/components/schemas/SourceMedia'
+        preview_media:
+          $ref: '#/components/schemas/PreviewMedia'
+        web3_storage_media:
+          $ref: '#/components/schemas/Web3StorageMedia'
+        article_obtain_condition:
+          $ref: '#/components/schemas/ArticleObtainCondition'
+        article_find_conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleFindCondition'
+        preview_setting:
+          type: string
+        collection:
+          $ref: '#/components/schemas/ArticleCollection'
+        quest_id:
+          type: integer
+          format: int32
+        product:
+          $ref: '#/components/schemas/ArticleProduct'
+    ArticleCollection:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        smart_contract_address:
+          type: string
+    ArticleFindCondition:
+      type: object
+      required:
+        - id
+        - article_uid
+        - find_condition_id
+        - data
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          format: int32
+        article_uid:
+          type: string
+        find_condition_id:
+          type: integer
+          format: int32
+        data:
+          $ref: '#/components/schemas/FindConditionData'
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    ArticleObtainCondition:
+      type: object
+      required:
+        - article_uid
+        - obtain_condition_id
+        - data
+      properties:
+        article_uid:
+          type: string
+        obtain_condition_id:
+          type: integer
+          format: int32
+        data:
+          type: object
+          properties:
+            price:
+              type: string
+          required:
+            - price
+    ArticleProduct:
+      type: object
+      required:
+        - id
+        - uid
+        - model_id
+        - model_type
+        - status
+        - sale_status
+        - unlimited
+        - amount
+        - amount_total_sale
+        - user_hold_limit
+        - seller_pay_gas_fee
+        - price
+        - on_sale_start_time
+        - on_sale_end_time
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          format: int32
+        uid:
+          type: string
+        model_id:
+          type: string
+        model_type:
+          type: string
+        status:
+          type: integer
+          format: int32
+        sale_status:
+          type: integer
+          format: int32
+        unlimited:
+          type: integer
+          format: int32
+        amount:
+          type: integer
+          format: int32
+        amount_total_sale:
+          type: integer
+          format: int32
+        user_hold_limit:
+          type: integer
+          format: int32
+        seller_pay_gas_fee:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        on_sale_start_time:
+          type: string
+        on_sale_end_time:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        deleted_at:
+          type: string
+    CalculatingSpot:
+      type: object
+      required:
+        - id
+        - map_id
+        - xy
+        - geo
+        - marker_id
+      properties:
+        id:
+          type: integer
+          format: int32
+        map_id:
+          type: integer
+          format: int32
+        xy:
+          type: array
+          items: {}
+        geo:
+          type: array
+          items: {}
+        marker_id:
+          type: integer
+          format: int32
+    CalculatingSpotResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalculatingSpot'
+    Comment:
+      type: object
+      required:
+        - id
+        - content
+        - created_at
+        - user_avatar
+        - type
+      properties:
+        id:
+          type: integer
+          format: int32
+        content:
+          type: string
+        created_at:
+          type: string
+        user_id:
+          type: integer
+          format: int32
+        user_name:
+          type: string
+        user_avatar:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/CommentType'
+        spot_id:
+          type: integer
+          format: int32
+          nullable: true
+    CommentType:
+      type: string
+      enum:
+        - comment
+    CreateCommentInput:
+      type: object
+      required:
+        - spot_id
+        - user_id
+        - type
+        - content
+      properties:
+        spot_id:
+          type: integer
+          format: int32
+        user_id:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/CommentType'
+        content:
+          type: string
+    CreateCommentResponse:
+      type: object
+      required:
+        - data
+      properties:
+        messages:
+          type: string
+        data:
+          $ref: '#/components/schemas/Comment'
+    DataItem:
+      type: object
+      required:
+        - id
+        - type
+        - click_action
+        - name
+        - z_index
+        - show_sync_icon
+        - spot_access_token
+        - public
+        - disable_modal
+        - marker
+        - comments
+        - geo_lat
+        - geo_lng
+      properties:
+        id:
+          type: integer
+          format: int32
+        type:
+          anyOf:
+            - type: string
+              enum:
+                - sync
+            - type: string
+        click_action:
+          type: string
+        name:
+          type: string
+        z_index:
+          type: integer
+          format: int32
+        description:
+          type: string
+          nullable: true
+        show_sync_icon:
+          type: integer
+          format: int32
+        spot_access_token:
+          type: string
+        public:
+          type: integer
+          format: int32
+        disable_modal:
+          type: integer
+          format: int32
+        marker:
+          $ref: '#/components/schemas/Marker'
+        comments:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Comment'
+        refer_map:
+          nullable: true
+        osm_refer_map:
+          nullable: true
+        refer_map_option_id:
+          type: integer
+          format: int32
+          nullable: true
+        geo_lat:
+          type: number
+          format: double
+        geo_lng:
+          type: number
+          format: double
+        osm_config:
+          nullable: true
+    FindConditionData:
+      type: object
+      properties:
+        spot_id:
+          type: integer
+          format: int32
+        project_uid:
+          type: string
+        access_token:
+          type: string
+    HaveArticleResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+            spot_access_token:
+              type: string
+            article_uid:
+              type: string
+          required:
+            - id
+            - spot_access_token
+            - article_uid
+    Icon:
+      type: object
+      required:
+        - link
+        - left_right_flip_link
+        - up_down_flip_link
+      properties:
+        link:
+          type: string
+          nullable: true
+        left_right_flip_link:
+          type: string
+          nullable: true
+        up_down_flip_link:
+          type: string
+          nullable: true
+    LevelMarker:
+      type: object
+      required:
+        - id
+        - lat
+        - lng
+        - map_level_id
+        - available
+      properties:
+        id:
+          type: integer
+          format: int32
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        ref_lat:
+          type: number
+          format: double
+          nullable: true
+        ref_lng:
+          type: number
+          format: double
+          nullable: true
+        map_level_id:
+          type: integer
+          format: int32
+        available:
+          type: integer
+          format: int32
+    LikeSpotInput:
+      type: object
+      required:
+        - user_id
+        - spot_id
+      properties:
+        user_id:
+          type: integer
+          format: int32
+        spot_id:
+          type: integer
+          format: int32
+    LikeSpotResponse:
+      type: object
+      required:
+        - user_id
+        - likeable_id
+        - likeable_type
+        - updated_at
+        - created_at
+        - id
+      properties:
+        user_id:
+          type: integer
+          format: int32
+        likeable_id:
+          type: integer
+          format: int32
+        likeable_type:
+          type: string
+        updated_at:
+          type: string
+        created_at:
+          type: string
+        id:
+          type: integer
+          format: int32
+    Marker:
+      type: object
+      required:
+        - id
+        - type
+        - size_w
+        - size_h
+        - icon_anchor_lat
+        - icon_anchor_lng
+        - shadow_size_w
+        - shadow_size_h
+        - icon_social_position_x
+        - icon_social_position_y
+        - border_color
+        - icon
+        - osm_icon
+        - level_markers
+        - moving_stages
+        - route
+        - draggable
+        - osm_config
+      properties:
+        id:
+          type: integer
+          format: int32
+        type:
+          anyOf:
+            - type: string
+              enum:
+                - round
+            - type: string
+        size_w:
+          type: integer
+          format: int32
+        size_h:
+          type: integer
+          format: int32
+        icon_anchor_lat:
+          type: string
+        icon_anchor_lng:
+          type: string
+        shadow_size_w:
+          type: integer
+          format: int32
+        shadow_size_h:
+          type: integer
+          format: int32
+        icon_social_position_x:
+          type: integer
+          format: int32
+        icon_social_position_y:
+          type: integer
+          format: int32
+        border_color:
+          type: string
+        icon:
+          $ref: '#/components/schemas/Icon'
+        osm_icon:
+          $ref: '#/components/schemas/OsmIcon'
+        level_markers:
+          type: array
+          items:
+            $ref: '#/components/schemas/LevelMarker'
+        moving_stages:
+          type: array
+          items: {}
+        route:
+          nullable: true
+        draggable:
+          type: integer
+          format: int32
+        osm_config:
+          nullable: true
+    OsmIcon:
+      type: object
+      required:
+        - link
+      properties:
+        link:
+          type: string
+          nullable: true
+    PreviewMedia:
+      type: object
+      required:
+        - media_url
+        - article_uid
+        - mine_type
+      properties:
+        media_url:
+          type: string
+        article_uid:
+          type: string
+        mine_type:
+          type: string
+    Product:
+      type: object
+      required:
+        - id
+        - status
+        - sale_status
+        - unlimited
+        - amount
+        - amount_total_sale
+        - price
+        - on_sale_start_time
+        - on_sale_end_time
+        - user_hold_limit
+      properties:
+        id:
+          type: integer
+          format: int32
+        status:
+          type: integer
+          format: int32
+        sale_status:
+          type: integer
+          format: int32
+        unlimited:
+          type: integer
+          format: int32
+        amount:
+          type: integer
+          format: int32
+        amount_total_sale:
+          type: integer
+          format: int32
+        price:
+          type: integer
+          format: int32
+        on_sale_start_time:
+          type: string
+        on_sale_end_time:
+          type: string
+        user_hold_limit:
+          type: integer
+          format: int32
+    RelationshipType:
+      type: string
+      enum:
+        - product
+    ResourceType:
+      type: string
+      enum:
+        - frontend
+    SourceMedia:
+      type: object
+      required:
+        - media_url
+        - article_uid
+        - mine_type
+      properties:
+        media_url:
+          type: string
+        article_uid:
+          type: string
+        mine_type:
+          type: string
+        poster_url:
+          type: string
+        short_url:
+          type: string
+        convert_url:
+          type: string
+    SpotDetailResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+            name:
+              type: string
+            description:
+              type: string
+            geo_lat:
+              type: number
+              format: double
+            geo_lng:
+              type: number
+              format: double
+            spot_access_token:
+              type: string
+            product:
+              $ref: '#/components/schemas/Product'
+            article:
+              $ref: '#/components/schemas/Article'
+          required:
+            - id
+            - name
+            - description
+            - geo_lat
+            - geo_lng
+            - spot_access_token
+            - product
+            - article
+    SpotItem:
+      type: object
+      required:
+        - id
+        - uuid
+        - spot_access_token
+        - name
+        - description
+        - translate_note
+        - type
+        - checkin_distance
+        - next_check_in_time
+        - geo_lat_lng
+        - tag_slugs
+        - tag_names
+        - media_url
+        - month
+        - slug
+        - spot_medias
+        - translated_versions
+      properties:
+        id:
+          type: integer
+          format: int32
+        uuid:
+          type: string
+        spot_access_token:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        translate_note:
+          type: string
+          nullable: true
+        type:
+          type: string
+        checkin_distance:
+          type: integer
+          format: int32
+        next_check_in_time:
+          type: integer
+          format: int32
+        geo_lat_lng:
+          type: array
+          items: {}
+        tag_slugs:
+          type: array
+          items:
+            type: string
+        tag_names:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TagNameInfo'
+        media_url:
+          type: string
+        month:
+          type: array
+          items:
+            type: string
+        slug:
+          type: string
+        spot_medias:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpotMedia'
+        translated_versions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SpotTranslatedVersion'
+    SpotMedia:
+      type: object
+      required:
+        - id
+        - order
+        - comment
+        - month
+        - type
+        - media_url
+        - thumbnail_url
+        - path
+        - translated_versions
+      properties:
+        id:
+          type: integer
+          format: int32
+        order:
+          type: integer
+          format: int32
+        comment:
+          type: string
+        month:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+        media_url:
+          type: string
+        thumbnail_url:
+          type: string
+        path:
+          type: string
+        translated_versions:
+          type: array
+          items: {}
+    SpotResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataItem'
+    SpotTagsResponse:
+      type: object
+      required:
+        - messages
+        - data
+      properties:
+        messages:
+          type: string
+          nullable: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    SpotTranslatedVersion:
+      type: object
+      required:
+        - id
+        - translated_object_id
+        - translated_object_type
+        - target_language
+        - translated_column
+        - translated_content
+      properties:
+        id:
+          type: integer
+          format: int32
+        translated_object_id:
+          type: integer
+          format: int32
+        translated_object_type:
+          type: string
+        target_language:
+          type: string
+        translated_column:
+          type: string
+        translated_content:
+          type: object
+          additionalProperties:
+            type: string
+    SyncSpotResponse:
+      type: object
+      required:
+        - current_page
+        - data
+      properties:
+        current_page:
+          type: integer
+          format: int32
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpotItem'
+    Tag:
+      type: object
+      required:
+        - id
+        - tag_name
+        - tag_slug
+      properties:
+        id:
+          type: integer
+          format: int32
+        tag_name:
+          type: string
+        tag_slug:
+          type: string
+    TagNameInfo:
+      type: object
+      required:
+        - tag_name
+        - translated_versions
+      properties:
+        tag_name:
+          type: string
+        translated_versions:
+          type: array
+          items: {}
+    Web3StorageMedia:
+      type: object
+      required:
+        - web3_media_uid
+        - article_uid
+        - web3_media_cid
+      properties:
+        web3_media_uid:
+          type: string
+        article_uid:
+          type: string
+        web3_media_cid:
+          type: string
+servers:
+  - url: https://api-stg.geomark.co.jp
+    description: StagingServer
+    variables: {}
+  - url: https://engine.geomark.yopaz.dev
+    description: DevServer
+    variables: {}

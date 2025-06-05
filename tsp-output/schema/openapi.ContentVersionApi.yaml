@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: Content version API Service
+  version: 0.0.0
+tags:
+  - name: Content Version Api
+paths:
+  /api/content-versions/{content_version_uuid}/text-to-speech:
+    post:
+      operationId: textToSpeech
+      parameters:
+        - name: content_version_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTextToSpeechResponse'
+      tags:
+        - Content Version Api
+  /api/content-versions/{object_uuid}/latest:
+    get:
+      operationId: getLatestContentVersion
+      parameters:
+        - name: object_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestContentResponse'
+      tags:
+        - Content Version Api
+components:
+  schemas:
+    ContentVersion:
+      type: object
+      required:
+        - uuid
+        - owner_object_uuid
+        - related_object_uuid
+        - related_object_type
+        - content_type
+        - language
+        - key
+        - content
+        - version
+        - metadata
+        - created_at
+        - updated_at
+      properties:
+        uuid:
+          type: string
+        owner_object_uuid:
+          type: string
+        related_object_uuid:
+          type: string
+        related_object_type:
+          type: string
+        source_content_version_uuid:
+          type: string
+        origin_content_version_uuid:
+          type: string
+        content_type:
+          type: string
+        language:
+          type: string
+        key:
+          type: string
+        content:
+          type: string
+        audio_content:
+          type: string
+        version:
+          type: string
+        metadata:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        deleted_at:
+          type: string
+    CreateTextToSpeechResponse:
+      type: object
+      required:
+        - data
+      properties:
+        messages:
+          type: string
+        data:
+          $ref: '#/components/schemas/ContentVersion'
+    LatestContentResponse:
+      type: object
+      required:
+        - data
+      properties:
+        messages:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/ContentVersion'
+servers:
+  - url: https://engine.geomark.yopaz.dev
+    description: DevServer
+    variables: {}
