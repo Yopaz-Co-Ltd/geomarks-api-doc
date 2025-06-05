@@ -1,3 +1,14 @@
+import "./article.tsp";
+import "./comment.tsp";
+
+enum ResourceType {
+  frontend,
+}
+
+enum RelationshipType {
+  product,
+}
+
 model Icon {
   link: string | null;
   left_right_flip_link: string | null;
@@ -6,6 +17,12 @@ model Icon {
 
 model OsmIcon {
   link: string | null;
+}
+
+model Tag {
+  id: int32;
+  tag_name: string;
+  tag_slug: string;
 }
 
 model LevelMarker {
@@ -51,7 +68,7 @@ model DataItem {
   public: int32;
   disable_modal: int32;
   marker: Marker;
-  comments: unknown[]; // Cần schema cụ thể nếu có
+  comments: Record<Comment>; // Cần schema cụ thể nếu có
   refer_map?: unknown | null;
   osm_refer_map?: unknown | null;
   refer_map_option_id?: int32 | null;
@@ -65,22 +82,48 @@ model SpotResponse {
   data: DataItem[];
 }
 
+model HaveArticleResponse {
+  messages: string | null;
+  data: {
+    id: int32;
+    spot_access_token: string;
+    article_uid: string;
+  };
+}
+
 //calculating spot
 model CalculatingSpotInput {
-    conditions: {
-        map_id: string;
-    }
+    map_id: string;
 }
 
 model CalculatingSpot {
-  id: int;
-  map_id: int;
+  id: int32;
+  map_id: int32;
   xy: [float, float];
   geo: [float, float];
-  marker_id: int;
+  marker_id: int32;
 }
 
 model CalculatingSpotResponse {
   messages: string | null;
   data: CalculatingSpot[];
+}
+
+model SpotTagsResponse {
+  messages: string | null;
+  data: Tag[];
+}
+
+model SpotDetailResponse {
+  messages: string | null;
+  data: {
+    id: int32;
+    name: string;
+    description: string;
+    geo_lat: float64;
+    geo_lng: float64;
+    spot_access_token: string;
+    product: Product;
+    article: Article;
+  };
 }

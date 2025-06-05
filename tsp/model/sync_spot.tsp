@@ -1,50 +1,50 @@
 model SpotTranslatedVersion {
-  id: int;
-  translated_object_id: int;
+  id: int32;
+  translated_object_id: int32;
   translated_object_type: string;
   target_language: string;
   translated_column: string;
-  translated_content: Record<string, string>;
+  translated_content: Record<string>;
 }
 
 model SpotMedia {
-  id: int;
-  order: int;
+  id: int32;
+  order: int32;
   comment: string;
-  month: array<string>;
+  month: string[];
   type: string;
   media_url: string;
   thumbnail_url: string;
   path: string;
-  translated_versions: array<any>;
+  translated_versions: unknown[];
 }
 
 model TagNameInfo {
   tag_name: string;
-  translated_versions: array<any>;
+  translated_versions: unknown[];
 }
 
 model SpotItem {
-  id: int;
+  id: int32;
   uuid: string;
   spot_access_token: string;
   name: string;
   description: string;
   translate_note: string | null;
   type: string;
-  checkin_distance: int;
-  next_check_in_time: int;
+  checkin_distance: int32;
+  next_check_in_time: int32;
   geo_lat_lng: [float, float];
-  tag_slugs: array<string>;
-  tag_names: Record<string, TagNameInfo>;
+  tag_slugs: string[];
+  tag_names: Record<TagNameInfo>;
   media_url: string;
-  month: array<string>;
+  month: string[];
   slug: string;
-  spot_medias: array<SpotMedia>;
-  translated_versions: Record<string, SpotTranslatedVersion>;
+  spot_medias: SpotMedia[];
+  translated_versions: Record<SpotTranslatedVersion>;
 }
 
 model SyncSpotResponse {
-  current_page: int;
-  data: array<SpotItem>;
+  current_page: int32;
+  data: SpotItem[];
 }

@@ -1,7 +1,7 @@
-MODULE ?= auth
-TSP_FILE := $(MODULE).tsp
-OUT_DIR := ./openapi/$(MODULE)
-OPENAPI_FILE := $(OUT_DIR)/openapi.(MODULE).yaml
+#MODULE ?= content_version
+#TSP_FILE := $(MODULE).tsp
+#OUT_DIR := ./openapi/$(MODULE)
+#OPENAPI_FILE := $(OUT_DIR)/openapi.(MODULE).yaml
 
 openapi:
 	tsp compile ./tsp
