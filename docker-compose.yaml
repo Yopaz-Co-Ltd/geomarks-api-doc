@@ -9,3 +9,4 @@ services:
       - ./swagger-config.yaml:/usr/share/nginx/html/swagger-config.yaml
     environment:
       CONFIG_URL: /swagger-config.yaml
+    restart: unless-stopped
